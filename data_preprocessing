@@ -1,0 +1,122 @@
+#Data Preprocessing
+
+file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_20161114.csv'
+df = pd.read_csv(file_path)
+
+columns_to_remove = [
+    "Are you self-employed?",
+    "Is your primary role within your company related to tech/IT?", 
+    "Do you have medical coverage (private insurance or state-provided) which includes treatment of  mental health issues?", 
+    "Do you know local or online resources to seek help for a mental health disorder?", 
+    "If you have been diagnosed or treated for a mental health disorder, do you ever reveal this to clients or business contacts?", 
+    "If you have revealed a mental health issue to a client or business contact, do you believe this has impacted you negatively?", 
+    "If you have been diagnosed or treated for a mental health disorder, do you ever reveal this to coworkers or employees?", 
+    "If you have revealed a mental health issue to a coworker or employee, do you believe this has impacted you negatively?", 
+    "Do you believe your productivity is ever affected by a mental health issue?", 
+    "If yes, what percentage of your work time (time performing primary or secondary job functions) is affected by a mental health issue?", 
+    "Why or why not?", 
+    "Have your observations of how another individual who discussed a mental health disorder made you less likely to reveal a mental health issue yourself in your current workplace?", 
+    "If maybe, what condition(s) do you believe you have?", 
+    "If so, what condition(s) were you diagnosed with?", 
+    "What country do you work in?", 
+    "What US state or territory do you work in?"
+]
+
+df_cleaned = df.drop(columns=columns_to_remove)
+
+# save the cleaned dataset
+cleaned_file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clean.csv'
+df_cleaned.to_csv(cleaned_file_path, index=False)
+
+print("Cleaned dataset saved successfully!")
+
+
+
+  file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clean.csv'
+df = pd.read_csv(file_path)
+
+# Replace specific values with "NA"
+values_to_replace = [
+    "I don´t know", 
+    "Not eligible for coverage / N/A", 
+    "N/A (not currently aware)", 
+    "Not applicable to me"
+]
+df.replace(values_to_replace, "NA", inplace=True)
+
+# Replace remaining missing values with "NA"
+df.fillna("NA", inplace=True)
+
+# Verify the replacements
+print(df.head())
+
+# Save the modified DataFrame to a new CSV file
+output_file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clean.csv'
+df.to_csv(output_file_path, index=False)
+
+print(f"Changes saved to {output_file_path}")
+
+  file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clean.csv'
+df = pd.read_csv(file_path)
+
+# Drop rows where the specified column contains "0.0" or "NA"
+df = df[(df['Is your employer primarily a tech company/organization?'] != 0.0) & 
+        (df['Is your employer primarily a tech company/organization?'].notna())]
+
+# Optionally, reset the index
+df.reset_index(drop=True, inplace=True)
+
+# Save the modified DataFrame to a new CSV file
+output_file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clean.csv'
+df.to_csv(output_file_path, index=False)
+
+print(f"Changes saved to {output_file_path}")
+
+
+  #checking number of rows
+file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clean.csv'
+data = pd.read_csv(file_path)
+num_rows = len(data)
+print("Number of rows in the dataset:", num_rows)
+
+  file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clean.csv'
+df = pd.read_csv(file_path)
+
+df.drop(columns=['Is your employer primarily a tech company/organization?'], inplace=True)
+
+# Save the updated dataset
+output_file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clean.csv'
+df.to_csv(output_file_path, index=False)
+
+print("Column deleted and dataset saved to:", output_file_path)
+
+  file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clean.csv'
+df = pd.read_csv(file_path)
+
+# Replace 1 with "Yes" and 0 with "No" in the specified column
+df['Do you have previous employers?'] = df['Do you have previous employers?'].replace({1: 'Yes', 0: 'No'})
+df['Have you ever sought treatment for a mental health issue from a mental health professional?'] = df['Have you ever sought treatment for a mental health issue from a mental health professional?'].replace({1: 'Yes', 0: 'No'})
+
+output_file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clean.csv'
+df.to_csv(output_file_path, index=False)
+
+print("Values replaced and dataset saved to:", output_file_path)
+
+  file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clean.csv'
+df = pd.read_csv(file_path)
+
+df['What is your gender?'] = df['What is your gender?'].replace({
+    'Male': 'male', 'M': 'male', 'm': 'male',
+    'Female': 'female', 'I identify as female': 'female', 'f': 'female', 'F': 'female'
+})
+
+df['What is your gender?'] = df['What is your gender?'].apply(lambda x: x if x in ['male', 'female'] else 'other')
+
+output_file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clean.csv'
+df.to_csv(output_file_path, index=False)
+
+print("Values replaced and dataset saved to:", output_file_path)
+
+  
+
+  
