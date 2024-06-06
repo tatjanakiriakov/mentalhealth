@@ -1,0 +1,58 @@
+import pandas as pd
+
+file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clustered.csv'
+data = pd.read_csv(file_path)
+
+# Function to profile each cluster
+def profile_clusters(data, cluster_column='Cluster'):
+    cluster_profiles = {}
+    for cluster in data[cluster_column].unique():
+        cluster_data = data[data[cluster_column] == cluster]
+        cluster_profile = cluster_data.describe(include='all')
+        cluster_profiles[cluster] = cluster_profile
+    return cluster_profiles
+
+# Get cluster profiles
+cluster_profiles = profile_clusters(data)
+
+# Print the profiles for each cluster
+for cluster, profile in cluster_profiles.items():
+    print(f"Cluster {cluster} Profile:\n")
+    print(profile)
+    print("\n\n")
+
+# Additional: Visualize the differences (optional)
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Example visualization: average feature values for each cluster
+cluster_means = data.groupby('Cluster').mean()
+
+plt.figure(figsize=(12, 8))
+sns.heatmap(cluster_means.T, annot=True, cmap='viridis')
+plt.title('Average Feature Values per Cluster')
+plt.show()
+
+
+
+file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clustered.csv'
+data = pd.read_csv(file_path)
+
+# Drop the column
+data.drop("How many employees does your company or organization have?", axis=1, inplace=True)
+
+# Save the modified DataFrame to a new CSV file
+output_file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clustered_no_column.csv'
+data.to_csv(output_file_path, index=False)
+
+
+# Plot box plots for each feature
+for column in data.columns[:-1]:  
+    plt.figure(figsize=(10, 6)) 
+    sns.set(font_scale=1.2)
+    sns.boxplot(x='Cluster', y=column, data=data)
+    plt.title(f'{column} Distribution by Cluster')
+    plt.xlabel('Cluster')
+    plt.ylabel(column)
+    plt.show()
+
