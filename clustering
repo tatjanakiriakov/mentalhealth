@@ -1,0 +1,55 @@
+import pandas as pd
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+
+file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_cleaned.csv'
+data = pd.read_csv(file_path)
+
+# Step 2: Preprocess the Data
+# Select relevant columns
+relevant_columns = [
+    'Does your employer provide mental health benefits as part of healthcare coverage?', 'Do you know the options for mental health care available under your employer-provided coverage?',
+    'Has your employer ever formally discussed mental health (for example, as part of a wellness campaign or other official communication)?', 'Does your employer offer resources to learn more about mental health concerns and options for seeking help?', 'Is your anonymity protected if you choose to take advantage of mental health or substance abuse treatment resources provided by your employer?',
+    'Do you think that discussing a mental health disorder with your employer would have negative consequences?', 'Would you feel comfortable discussing a mental health disorder with your coworkers?', 'Do you feel that your employer takes mental health as seriously as physical health?', 'Have you heard of or observed negative consequences for co-workers who have been open about mental health issues in your workplace?', 'Have your previous employers provided mental health benefits?',
+    'Did your previous employers ever formally discuss mental health (as part of a wellness campaign or other official communication)?', 'Did your previous employers provide resources to learn more about mental health issues and how to seek help?', 'Was your anonymity protected if you chose to take advantage of mental health or substance abuse treatment resources with previous employers?', 'Would you have been willing to discuss a mental health issue with your previous co-workers?',
+    'Would you have been willing to discuss a mental health issue with your direct supervisor(s)?', 'Did you feel that your previous employers took mental health as seriously as physical health?', 'Did you hear of or observe negative consequences for co-workers with mental health issues in your previous workplaces?', 'Would you be willing to bring up a physical health issue with a potential employer in an interview?',
+    'Do you think that team members/co-workers would view you more negatively if they knew you suffered from a mental health issue?', 'How willing would you be to share with friends and family that you have a mental illness?', 'Have you observed or experienced an unsupportive or badly handled response to a mental health issue in your current or previous workplace?',
+    'Do you have a family history of mental illness?', 'Have you had a mental health disorder in the past?', 'Do you currently have a mental health disorder?', 'If yes, what condition(s) have you been diagnosed with?',
+    'If you have a mental health issue, do you feel that it interferes with your work when being treated effectively?', 'What is your age?',
+    'What is your gender?', 'What country do you live in?', 'What US state or territory do you live in?', 'Which of the following best describes your work position?', 'Do you work remotely?'
+]
+
+data_filtered = data[relevant_columns]
+
+label_encoders = {}
+for column in data_filtered.columns:
+    if data_filtered[column].dtype == object:
+        le = LabelEncoder()
+        data_filtered[column] = le.fit_transform(data_filtered[column].astype(str))
+        label_encoders[column] = le
+
+scaler = StandardScaler()
+data_scaled = scaler.fit_transform(data_filtered)
+
+num_clusters = 5  
+kmeans = KMeans(n_clusters=num_clusters, random_state=42)
+clusters = kmeans.fit_predict(data_scaled)
+
+data['Cluster'] = clusters
+
+
+
+print(data['Cluster'].value_counts())
+
+plt.scatter(data_scaled[:, 0], data_scaled[:, 1], c=clusters, cmap='viridis')
+plt.xlabel('Feature 1')
+plt.ylabel('Feature 2')
+plt.title('Cluster visualization')
+plt.show()
+
+output_file_path = '/Users/tatjanakiriakov/Desktop/Feature Engineering/archive/mental-heath-in-tech-2016_clustered.csv'
+data.to_csv(output_file_path, index=False)
+
+
+
